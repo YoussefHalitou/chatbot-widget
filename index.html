@@ -11,6 +11,8 @@
       background: transparent; /* Transparent background */
     }
   </style>
+  <!-- Include marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <!-- Only the chatbot widget will be rendered here -->
@@ -24,10 +26,8 @@
       widgetContainer.style.right = "20px";
       widgetContainer.style.zIndex = "9999";
       document.body.appendChild(widgetContainer);
-
       // Attach a Shadow DOM for style isolation.
       var shadow = widgetContainer.attachShadow({ mode: 'open' });
-
       // Define the HTML and CSS for the widget.
       var widgetHTML = `
         <style>
@@ -37,11 +37,10 @@
           :host {
             font-family: 'Roboto', sans-serif;
           }
-
           /* Launcher Button with sophisticated gradient and pulse animation */
           #chat-launcher {
-            width: 60px;
-            height: 60px;
+            width: 70px; /* Increased size */
+            height: 70px; /* Increased size */
             border-radius: 50%;
             background: linear-gradient(135deg, #00B4DB, #0083B0, #003459);
             color: white;
@@ -49,7 +48,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 32px; /* Larger font size */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease;
             animation: pulse 2s infinite;
@@ -62,7 +61,6 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
           }
-
           /* Chat Window Container */
           #chat-container {
             width: 380px;
@@ -82,7 +80,6 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
           }
-
           /* Chat Header with multi-stop gradient and buttons */
           #chat-header {
             background: linear-gradient(135deg, #00B4DB, #0083B0, #003459);
@@ -117,7 +114,6 @@
             font-size: 20px;
             cursor: pointer;
           }
-
           /* Chat Window for messages */
           #chat-window {
             flex: 1;
@@ -161,6 +157,16 @@
             font-size: 14px;
             color: #333;
           }
+          .message-text p {
+            margin: 0 0 10px 0; /* Add spacing between paragraphs */
+          }
+          .message-text a {
+            color: #007BFF;
+            text-decoration: none;
+          }
+          .message-text a:hover {
+            text-decoration: underline;
+          }
           .timestamp {
             font-size: 10px;
             color: #777;
@@ -171,7 +177,6 @@
             from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
           }
-
           /* Typing Indicator */
           .typing-indicator {
             display: flex;
@@ -188,7 +193,6 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
           }
-
           /* Input Container */
           #input-container {
             display: flex;
@@ -218,10 +222,8 @@
             background: #0056b3;
           }
         </style>
-
         <!-- Chat Launcher (visible initially) with updated text -->
         <div id="chat-launcher">💬</div>
-
         <!-- Chat Window (hidden initially) with updated header name -->
         <div id="chat-container">
           <div id="chat-header">
@@ -232,14 +234,12 @@
           <div id="chat-window"></div>
           <div id="input-container">
             <input type="text" id="user-input" placeholder="Schreiben Sie hier Ihre Frage..." autofocus />
-            <button id="send-button">Send</button>
+            <button id="send-button">Senden</button>
           </div>
         </div>
       `;
-
       // Insert the HTML into the Shadow DOM.
       shadow.innerHTML = widgetHTML;
-
       // Retrieve elements from the Shadow DOM.
       var chatLauncher = shadow.getElementById('chat-launcher');
       var chatContainer = shadow.getElementById('chat-container');
@@ -248,7 +248,6 @@
       var chatWindow = shadow.getElementById('chat-window');
       var userInput = shadow.getElementById('user-input');
       var sendButton = shadow.getElementById('send-button');
-
       // Function to add a message with an avatar and timestamp.
       function addMessage(text, sender) {
         var messageContainer = document.createElement('div');
@@ -256,25 +255,21 @@
         if (sender === 'user') {
           messageContainer.classList.add('user-message');
         }
-
         var avatar = document.createElement('div');
         avatar.classList.add('avatar');
         avatar.textContent = sender === 'user' ? '👤' : '🤖';
-
         var content = document.createElement('div');
         content.classList.add('message-content');
-
         var textElem = document.createElement('div');
         textElem.classList.add('message-text');
-        textElem.textContent = text;
-
+        // Parse Markdown into HTML
+        textElem.innerHTML = marked.parse(text); // Use marked.js to render Markdown
         var timestamp = document.createElement('div');
         timestamp.classList.add('timestamp');
         var now = new Date();
         var hours = now.getHours().toString().padStart(2, '0');
         var minutes = now.getMinutes().toString().padStart(2, '0');
         timestamp.textContent = hours + ':' + minutes;
-
         content.appendChild(textElem);
         content.appendChild(timestamp);
         messageContainer.appendChild(avatar);
@@ -282,13 +277,12 @@
         chatWindow.appendChild(messageContainer);
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
-
       // Functions to manage the typing indicator.
       var typingIndicator;
       function showTypingIndicator() {
         typingIndicator = document.createElement('div');
         typingIndicator.classList.add('typing-indicator');
-        typingIndicator.textContent = 'Bot is typing...';
+        typingIndicator.textContent = 'Piedi antwortet...'; // Updated text
         chatWindow.appendChild(typingIndicator);
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
@@ -298,12 +292,10 @@
           typingIndicator = null;
         }
       }
-
       // Asynchronous function to send a message to your backend API.
       async function sendMessage(message) {
         addMessage(message, 'user');
         showTypingIndicator();
-
         var apiUrl = 'https://chatbotpiedi-561735337199.herokuapp.com/api/chat';
         try {
           var response = await fetch(apiUrl, {
@@ -318,10 +310,9 @@
         } catch (error) {
           console.error('Error:', error);
           removeTypingIndicator();
-          addMessage('Sorry, something went wrong!', 'bot');
+          addMessage('Sorry, etwas ist schiefgelaufen!', 'bot');
         }
       }
-
       // --- Event Listeners for Widget Interaction ---
       chatLauncher.addEventListener('click', function() {
         chatContainer.style.display = 'flex';
@@ -330,16 +321,13 @@
           userInput.focus();
         }, 100);
       });
-
       closeButton.addEventListener('click', function() {
         chatContainer.style.display = 'none';
         chatLauncher.style.display = 'flex';
       });
-
       clearButton.addEventListener('click', function() {
         chatWindow.innerHTML = '';
       });
-
       sendButton.addEventListener('click', function() {
         var message = userInput.value.trim();
         if (message !== '') {
@@ -347,7 +335,6 @@
           userInput.value = '';
         }
       });
-
       userInput.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
           var message = userInput.value.trim();
