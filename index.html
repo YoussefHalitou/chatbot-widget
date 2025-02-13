@@ -36,7 +36,7 @@
           :host {
             font-family: 'Poppins', sans-serif;
           }
-
+        
           /* Launcher Button with text and styling */
           #chat-launcher {
             width: auto; /* Adjust width to fit text */
@@ -133,6 +133,8 @@
             padding: 15px;
             overflow-y: auto;
           }
+
+          
           /* Custom scrollbar */
           #chat-window::-webkit-scrollbar {
             width: 8px;
@@ -150,6 +152,14 @@
             opacity: 0;
             animation: slideIn 0.3s forwards; /* Slide-in animation */
           }
+
+          .bot-avatar {
+            width: 40px; /* Adjust size */
+            height: 40px;
+            border-radius: 50%; /* Circular shape */
+            object-fit: cover; /* Crop the image properly */
+         }
+
           @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -287,9 +297,19 @@
           messageContainer.classList.add('user-message');
         }
 
-        var avatar = document.createElement('div');
+        var avatar = document.createElement('div');  // Keep as a div for the user
         avatar.classList.add('avatar');
-        avatar.textContent = sender === 'user' ? '🙋‍♂️' : '🤗'; // Updated symbols
+
+        if (sender === 'user') {
+            avatar.textContent = '🙋‍♂️'; // Keep the user avatar as an emoji
+        } else {
+             var botImage = document.createElement('img'); // Create an image for the bot
+             botImage.src = 'bot-avatar.PNG'; // Change to your bot's image file
+             botImage.alt = 'Bot Avatar'; // Accessibility
+             botImage.classList.add('bot-avatar'); // Add a class for styling
+             avatar.appendChild(botImage); // Append the image inside the avatar div
+        }
+
 
         var content = document.createElement('div');
         content.classList.add('message-content');
@@ -327,7 +347,7 @@
       function showTypingIndicator() {
         typingIndicator = document.createElement('div');
         typingIndicator.classList.add('typing-indicator');
-        typingIndicator.textContent = 'Piedi antwortet...';
+        typingIndicator.textContent = 'Peter de Buhr antwortet...';
         chatWindow.appendChild(typingIndicator);
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
