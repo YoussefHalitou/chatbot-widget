@@ -4,15 +4,12 @@
   <meta charset="UTF-8">
   <title>Chatbot Widget</title>
   <style>
-    /* Ensure the body has no margin or padding */
     body {
       margin: 0;
       padding: 0;
       background: transparent; /* Transparent background */
     }
   </style>
-  <!-- Include marked.js for Markdown parsing -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <!-- Only the chatbot widget will be rendered here -->
@@ -26,45 +23,51 @@
       widgetContainer.style.right = "20px";
       widgetContainer.style.zIndex = "9999";
       document.body.appendChild(widgetContainer);
+
       // Attach a Shadow DOM for style isolation.
       var shadow = widgetContainer.attachShadow({ mode: 'open' });
+
       // Define the HTML and CSS for the widget.
       var widgetHTML = `
         <style>
-          /* Import Roboto font for modern typography */
-          @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+          /* Import Poppins font for modern typography */
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
           
           :host {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
           }
-          /* Launcher Button with sophisticated gradient and pulse animation */
+
+          /* Launcher Button with text and styling */
           #chat-launcher {
-            width: 160px; /* Increased size */
-            height: 160px; /* Increased size */
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00B4DB, #0083B0, #003459);
-            color: white;
+            width: auto; /* Adjust width to fit text */
+            height: 60px;
+            padding: 0 20px; /* Add padding for better spacing */
+            border-radius: 30px; /* Rounded corners */
+            background: linear-gradient(135deg, #2C3E50, #34495E); /* Modern gradient */
+            color: white; /* White text */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 36px; /* Larger font size */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
+            font-size: 16px; /* Adjust font size */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            transition: all 0.3s ease; /* Smooth transition */
             animation: pulse 2s infinite;
           }
           #chat-launcher:hover {
-            transform: scale(1.1);
+            transform: scale(1.05); /* Hover effect */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
           }
           @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
           }
+
           /* Chat Window Container */
           #chat-container {
-            width: 380px; /* Increased width */
-            height: 520px; /* Increased height */
+            width: 380px;
+            height: 520px;
             border-radius: 15px;
             background: #fff;
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
@@ -72,7 +75,7 @@
             flex-direction: column;
             overflow: hidden;
             position: fixed;
-            bottom: 110px; /* Adjusted position */
+            bottom: 90px;
             right: 20px;
             animation: slideUp 0.4s ease-out;
           }
@@ -80,55 +83,76 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
           }
-          /* Chat Header with multi-stop gradient and buttons */
+
+          /* Chat Header with modern gradient */
           #chat-header {
-            background: linear-gradient(135deg, #00B4DB, #0083B0, #003459);
-            color: #fff;
-            padding: 20px; /* Increased padding */
+            background: linear-gradient(135deg, #2C3E50, #34495E); /* Modern gradient */
+            color: white; /* White text */
+            padding: 15px;
             text-align: center;
             font-size: 20px; /* Larger font size */
-            font-weight: 500;
+            font-weight: 500; /* Medium weight */
             position: relative;
           }
-          /* Updated header text below (Piedi) */
           
           /* Clear Chat Button */
           #clear-button {
             position: absolute;
-            top: 15px; /* Adjusted position */
-            right: 55px; /* Adjusted position */
+            top: 10px;
+            right: 45px;
             background: transparent;
             border: none;
-            color: #fff;
-            font-size: 20px; /* Larger font size */
+            color: white; /* White icon */
+            font-size: 18px;
             cursor: pointer;
+            transition: transform 0.2s ease; /* Smooth transition */
+          }
+          #clear-button:hover {
+            transform: scale(1.1); /* Hover effect */
           }
           /* Close Button */
           #close-button {
             position: absolute;
-            top: 15px; /* Adjusted position */
-            right: 20px; /* Adjusted position */
+            top: 10px;
+            right: 15px;
             background: transparent;
             border: none;
-            color: #fff;
-            font-size: 24px; /* Larger font size */
+            color: white; /* White icon */
+            font-size: 20px;
             cursor: pointer;
+            transition: transform 0.2s ease; /* Smooth transition */
           }
+          #close-button:hover {
+            transform: scale(1.1); /* Hover effect */
+          }
+
           /* Chat Window for messages */
           #chat-window {
             flex: 1;
             background: #f5f5f5;
-            padding: 20px; /* Increased padding */
+            padding: 15px;
             overflow-y: auto;
+          }
+          /* Custom scrollbar */
+          #chat-window::-webkit-scrollbar {
+            width: 8px;
+          }
+          #chat-window::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
           }
           
           /* Message styling with avatars and fade-in animation */
           .message {
             display: flex;
             align-items: flex-start;
-            margin: 10px 0; /* Increased margin */
+            margin: 8px 0;
             opacity: 0;
-            animation: fadeIn 0.3s forwards;
+            animation: slideIn 0.3s forwards; /* Slide-in animation */
+          }
+          @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
           }
           /* Reverse alignment for user messages */
           .message.user-message {
@@ -136,99 +160,103 @@
           }
           /* Avatar styling */
           .avatar {
-            width: 40px; /* Increased size */
-            height: 40px; /* Increased size */
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             background: #ccc;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 10px; /* Increased margin */
-            font-size: 20px; /* Larger font size */
+            margin: 0 8px;
+            font-size: 18px;
           }
           /* Container for message text and timestamp */
           .message-content {
-            max-width: 75%; /* Slightly wider */
+            max-width: 70%;
             background: #e2e3e5;
-            padding: 12px 18px; /* Increased padding */
-            border-radius: 15px;
+            padding: 10px 15px;
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
           }
           .message-text {
-            font-size: 16px; /* Larger font size */
+            font-size: 14px;
             color: #333;
           }
-          .message-text p {
-            margin: 0 0 12px 0; /* Increased spacing between paragraphs */
-          }
-          .message-text a {
-            color: #007BFF;
-            text-decoration: none;
-          }
-          .message-text a:hover {
-            text-decoration: underline;
-          }
           .timestamp {
-            font-size: 12px; /* Larger font size */
+            font-size: 10px;
             color: #777;
             text-align: right;
-            margin-top: 6px; /* Increased margin */
+            margin-top: 4px;
+            font-weight: 300; /* Lighter weight */
           }
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
+
           /* Typing Indicator */
           .typing-indicator {
             display: flex;
             align-items: center;
-            padding: 12px 18px; /* Increased padding */
+            padding: 10px 15px;
             border-radius: 20px;
             background: #e2e3e5;
             color: #41464b;
-            max-width: 45%; /* Slightly wider */
+            max-width: 40%;
             animation: blink 1s infinite;
-            margin: 10px 0; /* Increased margin */
+            margin: 8px 0;
           }
           @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
           }
+
           /* Input Container */
           #input-container {
             display: flex;
             border-top: 1px solid #ddd;
-            padding: 15px; /* Increased padding */
+            padding: 10px;
             background: #fff;
           }
           #user-input {
             flex: 1;
-            padding: 12px; /* Increased padding */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px; /* Larger font size */
+            font-size: 14px;
           }
           #send-button {
-            margin-left: 12px; /* Increased margin */
-            padding: 12px 18px; /* Increased padding */
-            background: #007BFF;
+            margin-left: 10px;
+            padding: 10px 15px;
+            background: #34495E; 
             border: none;
             border-radius: 5px;
             color: #fff;
             cursor: pointer;
-            font-size: 16px; /* Larger font size */
-            transition: background 0.2s ease;
+            font-size: 14px;
+            transition: all 0.3s ease; /* Smooth transition */
           }
           #send-button:hover {
-            background: #0056b3;
+            background: #333333; /* Darker black on hover */
+            transform: scale(1.05); /* Hover effect */
+          }
+
+          /* Mobile Responsiveness */
+          @media (max-width: 480px) {
+            #chat-container {
+              width: 90%;
+              right: 5%;
+            }
+            #chat-launcher {
+              font-size: 14px;
+            }
           }
         </style>
+
         <!-- Chat Launcher (visible initially) with updated text -->
-        <div id="chat-launcher">💬</div>
+        <div id="chat-launcher">Stellen Sie hier Ihre Fragen!</div>
+
         <!-- Chat Window (hidden initially) with updated header name -->
         <div id="chat-container">
           <div id="chat-header">
             Piedi
-            <button id="clear-button">🗑</button>
+            <button id="clear-button">🔄</button>
             <button id="close-button">&times;</button>
           </div>
           <div id="chat-window"></div>
@@ -238,8 +266,10 @@
           </div>
         </div>
       `;
+
       // Insert the HTML into the Shadow DOM.
       shadow.innerHTML = widgetHTML;
+
       // Retrieve elements from the Shadow DOM.
       var chatLauncher = shadow.getElementById('chat-launcher');
       var chatContainer = shadow.getElementById('chat-container');
@@ -248,6 +278,7 @@
       var chatWindow = shadow.getElementById('chat-window');
       var userInput = shadow.getElementById('user-input');
       var sendButton = shadow.getElementById('send-button');
+
       // Function to add a message with an avatar and timestamp.
       function addMessage(text, sender) {
         var messageContainer = document.createElement('div');
@@ -255,21 +286,25 @@
         if (sender === 'user') {
           messageContainer.classList.add('user-message');
         }
+
         var avatar = document.createElement('div');
         avatar.classList.add('avatar');
-        avatar.textContent = sender === 'user' ? '👤' : '🤖';
+        avatar.textContent = sender === 'user' ? '🙋‍♂️' : '🤗'; // Updated symbols
+
         var content = document.createElement('div');
         content.classList.add('message-content');
+
         var textElem = document.createElement('div');
         textElem.classList.add('message-text');
-        // Parse Markdown into HTML
-        textElem.innerHTML = marked.parse(text); // Use marked.js to render Markdown
+        textElem.textContent = text;
+
         var timestamp = document.createElement('div');
         timestamp.classList.add('timestamp');
         var now = new Date();
         var hours = now.getHours().toString().padStart(2, '0');
         var minutes = now.getMinutes().toString().padStart(2, '0');
         timestamp.textContent = hours + ':' + minutes;
+
         content.appendChild(textElem);
         content.appendChild(timestamp);
         messageContainer.appendChild(avatar);
@@ -277,12 +312,22 @@
         chatWindow.appendChild(messageContainer);
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
+
+      // Event listener for the chat launcher
+      chatLauncher.addEventListener('click', function() {
+        chatContainer.style.display = 'flex';
+        chatLauncher.style.display = 'none';
+        setTimeout(function() {
+          userInput.focus();
+        }, 100);
+      });
+
       // Functions to manage the typing indicator.
       var typingIndicator;
       function showTypingIndicator() {
         typingIndicator = document.createElement('div');
         typingIndicator.classList.add('typing-indicator');
-        typingIndicator.textContent = 'Piedi antwortet...'; // Updated text
+        typingIndicator.textContent = 'Piedi antwortet...';
         chatWindow.appendChild(typingIndicator);
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
@@ -292,10 +337,12 @@
           typingIndicator = null;
         }
       }
+
       // Asynchronous function to send a message to your backend API.
       async function sendMessage(message) {
         addMessage(message, 'user');
         showTypingIndicator();
+
         var apiUrl = 'https://chatbotpiedi-561735337199.herokuapp.com/api/chat';
         try {
           var response = await fetch(apiUrl, {
@@ -310,24 +357,20 @@
         } catch (error) {
           console.error('Error:', error);
           removeTypingIndicator();
-          addMessage('Sorry, etwas ist schiefgelaufen!', 'bot');
+          addMessage('Sorry, something went wrong!', 'bot');
         }
       }
+
       // --- Event Listeners for Widget Interaction ---
-      chatLauncher.addEventListener('click', function() {
-        chatContainer.style.display = 'flex';
-        chatLauncher.style.display = 'none';
-        setTimeout(function() {
-          userInput.focus();
-        }, 100);
-      });
       closeButton.addEventListener('click', function() {
         chatContainer.style.display = 'none';
         chatLauncher.style.display = 'flex';
       });
+
       clearButton.addEventListener('click', function() {
         chatWindow.innerHTML = '';
       });
+
       sendButton.addEventListener('click', function() {
         var message = userInput.value.trim();
         if (message !== '') {
@@ -335,6 +378,7 @@
           userInput.value = '';
         }
       });
+
       userInput.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
           var message = userInput.value.trim();
