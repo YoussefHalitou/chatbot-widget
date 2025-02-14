@@ -24,7 +24,8 @@
       widgetContainer.style.position = "fixed";
       widgetContainer.style.bottom = "20px";
       widgetContainer.style.right = "20px";
-      widgetContainer.style.zIndex = "9999";
+      widgetContainer.style.zIndex = "100"; // Lower z-index to avoid conflicts
+      widgetContainer.style.pointerEvents = "none"; // Allow clicks to pass through
       document.body.appendChild(widgetContainer);
 
       // Attach a Shadow DOM for style isolation.
@@ -33,6 +34,11 @@
       // Define the HTML and CSS for the widget.
       var widgetHTML = `
         <style>
+          /* Enable pointer events inside the chatbot */
+          #chatbot-widget-container {
+            pointer-events: auto;
+          }
+
           /* Import Poppins font for modern typography */
           @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
           
