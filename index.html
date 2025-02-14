@@ -24,7 +24,7 @@
       widgetContainer.style.position = "fixed";
       widgetContainer.style.bottom = "20px";
       widgetContainer.style.right = "20px";
-      widgetContainer.style.zIndex = "100"; // Lower z-index to avoid conflicts
+      widgetContainer.style.zIndex = "99999"; // Higher z-index
       widgetContainer.style.pointerEvents = "none"; // Allow clicks to pass through
       document.body.appendChild(widgetContainer);
 
@@ -34,9 +34,23 @@
       // Define the HTML and CSS for the widget.
       var widgetHTML = `
         <style>
-          /* Enable pointer events inside the chatbot */
+          /* Ensure the chatbot stays above other elements */
           #chatbot-widget-container {
             pointer-events: auto;
+            z-index: 99999; /* Higher z-index */
+          }
+
+          /* Transparent overlay to allow clicks to pass through */
+          #chatbot-widget-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none; /* Allow clicks to pass through */
+            z-index: -1; /* Place it behind the chatbot */
           }
 
           /* Import Poppins font for modern typography */
