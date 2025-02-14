@@ -10,6 +10,9 @@
       background: transparent; /* Transparent background */
     }
   </style>
+  <!-- Include marked.js and DOMPurify -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 </head>
 <body>
   <!-- Only the chatbot widget will be rendered here -->
@@ -289,6 +292,14 @@
       var userInput = shadow.getElementById('user-input');
       var sendButton = shadow.getElementById('send-button');
 
+      // Function to safely render Markdown as HTML
+      function renderMarkdown(text) {
+        // Parse Markdown to HTML
+        var rawHtml = marked.parse(text);
+        // Sanitize the HTML to prevent XSS
+        return DOMPurify.sanitize(rawHtml);
+      }
+
       // Function to add a message with an avatar and timestamp.
       function addMessage(text, sender) {
         var messageContainer = document.createElement('div');
@@ -310,13 +321,12 @@
              avatar.appendChild(botImage); // Append the image inside the avatar div
         }
 
-
         var content = document.createElement('div');
         content.classList.add('message-content');
 
         var textElem = document.createElement('div');
         textElem.classList.add('message-text');
-        textElem.textContent = text;
+        textElem.innerHTML = renderMarkdown(text); // Render Markdown safely
 
         var timestamp = document.createElement('div');
         timestamp.classList.add('timestamp');
