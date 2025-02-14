@@ -24,7 +24,8 @@
       widgetContainer.style.position = "fixed";
       widgetContainer.style.bottom = "20px";
       widgetContainer.style.right = "20px";
-      widgetContainer.style.zIndex = "9999";
+      widgetContainer.style.zIndex = "2147483647"; // Maximum z-index
+      widgetContainer.style.pointerEvents = "none"; // Allow clicks to pass through
       document.body.appendChild(widgetContainer);
 
       // Attach a Shadow DOM for style isolation.
@@ -33,6 +34,25 @@
       // Define the HTML and CSS for the widget.
       var widgetHTML = `
         <style>
+          /* Ensure the chatbot stays above all other elements */
+          #chatbot-widget-container {
+            pointer-events: auto;
+            z-index: 2147483647; /* Maximum z-index */
+          }
+
+          /* Transparent overlay to allow clicks to pass through */
+          #chatbot-widget-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none; /* Allow clicks to pass through */
+            z-index: -1; /* Place it behind the chatbot */
+          }
+
           /* Import Poppins font for modern typography */
           @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
           
