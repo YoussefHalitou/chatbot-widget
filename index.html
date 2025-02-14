@@ -24,8 +24,7 @@
       widgetContainer.style.position = "fixed";
       widgetContainer.style.bottom = "20px";
       widgetContainer.style.right = "20px";
-      widgetContainer.style.zIndex = "2147483647"; // Maximum z-index
-      widgetContainer.style.pointerEvents = "none"; // Allow clicks to pass through
+      widgetContainer.style.zIndex = "9999";
       document.body.appendChild(widgetContainer);
 
       // Attach a Shadow DOM for style isolation.
@@ -34,25 +33,6 @@
       // Define the HTML and CSS for the widget.
       var widgetHTML = `
         <style>
-          /* Ensure the chatbot stays above all other elements */
-          #chatbot-widget-container {
-            pointer-events: auto;
-            z-index: 2147483647; /* Maximum z-index */
-          }
-
-          /* Transparent overlay to allow clicks to pass through */
-          #chatbot-widget-container::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            pointer-events: none; /* Allow clicks to pass through */
-            z-index: -1; /* Place it behind the chatbot */
-          }
-
           /* Import Poppins font for modern typography */
           @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
           
@@ -283,7 +263,7 @@
         </style>
 
         <!-- Chat Launcher (visible initially) with updated text -->
-        <div id="chat-launcher">Hier könnt ihr eure Fragen stellen!</div>
+        <div id="chat-launcher">Stellen Sie hier Ihre Fragen!</div>
 
         <!-- Chat Window (hidden initially) with updated header name -->
         <div id="chat-container">
@@ -294,7 +274,7 @@
           </div>
           <div id="chat-window"></div>
           <div id="input-container">
-            <input type="text" id="user-input" placeholder="Schreibt hier eure Frage..." autofocus />
+            <input type="text" id="user-input" placeholder="Schreiben Sie hier Ihre Frage..." autofocus />
             <button id="send-button">Senden</button>
           </div>
         </div>
