@@ -69,7 +69,6 @@
 
           /* Chat Window Container */
           #chat-container {
-            point-events:auto;
             width: 380px;
             height: 520px;
             border-radius: 15px;
@@ -83,13 +82,6 @@
             right: 20px;
             animation: slideUp 0.4s ease-out;
           }
-
-          #chat-container.closed {
-            position: absolute !important;
-            top: -9999px !important;
-            visibility: hidden !important;
-          }
-
           @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -401,18 +393,8 @@
 
       // --- Event Listeners for Widget Interaction ---
       closeButton.addEventListener('click', function() {
-        chatContainer.classList.add('closed');
         chatContainer.style.display = 'none';
         chatLauncher.style.display = 'flex';
-      });
-
-      chatLauncher.addEventListener('click', function() {
-        chatContainer.classList.remove('closed');
-        chatContainer.style.display = 'flex';
-        chatLauncher.style.display = 'none';
-        setTimeout(function() {
-            userInput.focus();
-        }, 100);
       });
 
       clearButton.addEventListener('click', function() {
