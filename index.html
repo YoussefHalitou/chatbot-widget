@@ -343,13 +343,28 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
 
+      
       // Event listener for the chat launcher
       chatLauncher.addEventListener('click', function() {
+      // Show the chat window and hide the launcher
         chatContainer.style.display = 'flex';
         chatLauncher.style.display = 'none';
         setTimeout(function() {
           userInput.focus();
         }, 100);
+
+      // Send a message to the parent page that the chat window is open
+      window.parent.postMessage('chat-open', '*');
+      });
+
+      // Event listener for the close button
+      closeButton.addEventListener('click', function() {
+        // Hide the chat window and show the launcher
+        chatContainer.style.display = 'none';
+        chatLauncher.style.display = 'flex';
+
+        // Send a message to the parent page that the chat window is closed
+        window.parent.postMessage('chat-close', '*');
       });
 
       // Functions to manage the typing indicator.
