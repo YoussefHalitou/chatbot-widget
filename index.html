@@ -290,6 +290,21 @@
       var chatWindow = shadow.getElementById('chat-window');
       var userInput = shadow.getElementById('user-input');
       var sendButton = shadow.getElementById('send-button');
+      
+      // Function to notify the parent website
+      function notifyParent(action) {
+      window.parent.postMessage({ action: action }, '*');
+      }
+
+      // Notify parent when the chat window is opened
+      chatLauncher.addEventListener('click', function () {
+      notifyParent('open');
+      });
+
+      // Notify parent when the chat window is closed
+      closeButton.addEventListener('click', function () {
+        notifyParent('close');
+      });
 
       // Function to safely render Markdown as HTML.
       function renderMarkdown(text) {
