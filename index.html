@@ -137,7 +137,6 @@
             overflow-y: auto;
           }
 
-          
           /* Custom scrollbar */
           #chat-window::-webkit-scrollbar {
             width: 8px;
@@ -161,7 +160,7 @@
             height: 40px;
             border-radius: 50%; /* Circular shape */
             object-fit: cover; /* Crop the image properly */
-         }
+          }
 
           @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -263,7 +262,7 @@
         </style>
 
         <!-- Chat Launcher (visible initially) with updated text -->
-        <div id="chat-launcher">Stellt hier eure Fragen!</div>
+        <div id="chat-launcher">Stellen Sie hier Ihre Fragen!</div>
 
         <!-- Chat Window (hidden initially) with updated header name -->
         <div id="chat-container">
@@ -274,7 +273,7 @@
           </div>
           <div id="chat-window"></div>
           <div id="input-container">
-            <input type="text" id="user-input" placeholder="Hier könnt ihr eure Fragen stellen..." autofocus />
+            <input type="text" id="user-input" placeholder="Schreiben Sie hier Ihre Frage..." autofocus />
             <button id="send-button">Senden</button>
           </div>
         </div>
@@ -292,11 +291,11 @@
       var userInput = shadow.getElementById('user-input');
       var sendButton = shadow.getElementById('send-button');
 
-      // Function to safely render Markdown as HTML
+      // Function to safely render Markdown as HTML.
       function renderMarkdown(text) {
-        // Parse Markdown to HTML
+        // Parse Markdown to HTML.
         var rawHtml = marked.parse(text);
-        // Sanitize the HTML to prevent XSS
+        // Sanitize the HTML to prevent XSS.
         return DOMPurify.sanitize(rawHtml);
       }
 
@@ -308,17 +307,17 @@
           messageContainer.classList.add('user-message');
         }
 
-        var avatar = document.createElement('div');  // Keep as a div for the user
+        var avatar = document.createElement('div');  // Use a div for the avatar.
         avatar.classList.add('avatar');
 
         if (sender === 'user') {
-            avatar.textContent = '🙋‍♂️'; // Keep the user avatar as an emoji
+          avatar.textContent = '🙋‍♂️'; // Use an emoji as the user avatar.
         } else {
-             var botImage = document.createElement('img'); // Create an image for the bot
-             botImage.src = 'bot-avatar.PNG'; // Change to your bot's image file
-             botImage.alt = 'Bot Avatar'; // Accessibility
-             botImage.classList.add('bot-avatar'); // Add a class for styling
-             avatar.appendChild(botImage); // Append the image inside the avatar div
+          var botImage = document.createElement('img'); // Create an image for the bot.
+          botImage.src = 'bot-avatar.PNG'; // Update with your bot's image file.
+          botImage.alt = 'Bot Avatar';
+          botImage.classList.add('bot-avatar');
+          avatar.appendChild(botImage);
         }
 
         var content = document.createElement('div');
@@ -326,7 +325,7 @@
 
         var textElem = document.createElement('div');
         textElem.classList.add('message-text');
-        textElem.innerHTML = renderMarkdown(text); // Render Markdown safely
+        textElem.innerHTML = renderMarkdown(text); // Render Markdown safely.
 
         var timestamp = document.createElement('div');
         timestamp.classList.add('timestamp');
@@ -343,28 +342,14 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
 
-      
-      // Event listener for the chat launcher
+      // Event listener for the chat launcher.
       chatLauncher.addEventListener('click', function() {
-      // Show the chat window and hide the launcher
         chatContainer.style.display = 'flex';
         chatLauncher.style.display = 'none';
+        // Focus on the input after a short delay.
         setTimeout(function() {
           userInput.focus();
         }, 100);
-
-      // Send a message to the parent page that the chat window is open
-      window.parent.postMessage('chat-open', '*');
-      });
-
-      // Event listener for the close button
-      closeButton.addEventListener('click', function() {
-        // Hide the chat window and show the launcher
-        chatContainer.style.display = 'none';
-        chatLauncher.style.display = 'flex';
-
-        // Send a message to the parent page that the chat window is closed
-        window.parent.postMessage('chat-close', '*');
       });
 
       // Functions to manage the typing indicator.
@@ -385,7 +370,9 @@
 
       // Asynchronous function to send a message to your backend API.
       async function sendMessage(message) {
+        // Add user's message.
         addMessage(message, 'user');
+        // Show typing indicator.
         showTypingIndicator();
 
         var apiUrl = 'https://chatbotpiedi-561735337199.herokuapp.com/api/chat';
@@ -395,9 +382,11 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: message })
           });
+          // Simulate a small delay.
           await new Promise(resolve => setTimeout(resolve, 1000));
           var data = await response.json();
           removeTypingIndicator();
+          // Add bot's response.
           addMessage(data.message, 'bot');
         } catch (error) {
           console.error('Error:', error);
@@ -407,15 +396,19 @@
       }
 
       // --- Event Listeners for Widget Interaction ---
+
+      // Close button: hides the chat window and shows the launcher.
       closeButton.addEventListener('click', function() {
         chatContainer.style.display = 'none';
         chatLauncher.style.display = 'flex';
       });
 
+      // Clear button: removes all messages from the chat window.
       clearButton.addEventListener('click', function() {
         chatWindow.innerHTML = '';
       });
 
+      // Send button: sends the message from the input field.
       sendButton.addEventListener('click', function() {
         var message = userInput.value.trim();
         if (message !== '') {
@@ -424,6 +417,7 @@
         }
       });
 
+      // Allow sending message by pressing the Enter key.
       userInput.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
           var message = userInput.value.trim();
