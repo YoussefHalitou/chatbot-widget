@@ -252,8 +252,10 @@
           /* Mobile Responsiveness */
           @media (max-width: 480px) {
             #chat-container {
-              width: 90%;
-              right: 5%;
+              width: 80%;
+              height: 400px;
+              right: 10%;
+              bottom: 10px;
             }
             #chat-launcher {
               font-size: 14px;
@@ -262,7 +264,7 @@
         </style>
 
         <!-- Chat Launcher (visible initially) with updated text -->
-        <div id="chat-launcher">Stellen Sie hier Ihre Fragen!</div>
+        <div id="chat-launcher">Hier könnt ihr eure Fragen stellen!</div>
 
         <!-- Chat Window (hidden initially) with updated header name -->
         <div id="chat-container">
@@ -273,7 +275,7 @@
           </div>
           <div id="chat-window"></div>
           <div id="input-container">
-            <input type="text" id="user-input" placeholder="Schreiben Sie hier Ihre Frage..." autofocus />
+            <input type="text" id="user-input" placeholder="Schreibt hier eure Fragen..." autofocus />
             <button id="send-button">Senden</button>
           </div>
         </div>
